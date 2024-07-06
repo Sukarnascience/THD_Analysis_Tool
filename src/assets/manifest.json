@@ -8,11 +8,11 @@
   "outsource":[
     {
       "name":"NWT 4",
-      "exe":"'C:\\Program Files (x86)\\AFU\\NWT4\\NWT4000win.exe' -len"
+      "exe":"\"C:\\Program Files (x86)\\AFU\\NWT4\\NWT4000win.exe\" -len"
     },
     {
       "name":"NWT 5",
-      "exe":"'C:\\Program Files (x86)\\WinNWT5\\winnwt5.exe' app_en.qm"
+      "exe":"\"C:\\Program Files (x86)\\WinNWT5\\winnwt5.exe\" app_en.qm"
     }
   ],
   "graphicalLabel":{

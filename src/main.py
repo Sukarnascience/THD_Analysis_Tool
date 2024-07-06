@@ -3,6 +3,7 @@ import customtkinter
 import os
 from PIL import Image, ImageTk
 import time
+import subprocess
 
 # Custom Lib
 import config
@@ -62,22 +63,28 @@ class App(customtkinter.CTk):
         # Create buttons dynamically from outsource_data
         outsource_data = config.get_manifest().get("outsource", [])
 
-        for index, entry in enumerate(outsource_data):
-            button_text = entry["name"]
-            command_to_run = entry["exe"]
+        if outsource_data:
+            for index, entry in enumerate(outsource_data):
+                button_text = entry["name"]
+                command_to_run = entry["exe"]
 
-            # Create button with command execution
-            button = customtkinter.CTkButton(master=self.sidebar_frame, 
-                                            command=lambda cmd=command_to_run: self.run_command(cmd),
-                                            text=button_text)
-            button.grid(row=6 + index, column=0, pady=(2, 2), padx=5, sticky="n")
+                # Create button with command execution
+                button = customtkinter.CTkButton(
+                    master=self.sidebar_frame,
+                    command=lambda cmd=command_to_run: self.run_command(cmd),
+                    text=button_text
+                )
+                button.grid(row=6 + index, column=0, pady=(2, 2), padx=5, sticky="n")
 
         # Additional label or UI element
-        self.connectStatusText = customtkinter.CTkLabel(master=self.sidebar_frame, 
-                                                        text="Not Connected",
-                                                        font=customtkinter.CTkFont(size=13, weight="bold"),
-                                                        justify='left')
+        self.connectStatusText = customtkinter.CTkLabel(
+            master=self.sidebar_frame,
+            text="Not Connected",
+            font=customtkinter.CTkFont(size=13, weight="bold"),
+            justify='left'
+        )
         self.connectStatusText.grid(row=6 + len(outsource_data), column=0, padx=5, pady=(2, 20), sticky="n")
+
 
 
         # Appearance Mode option menu
@@ -125,9 +132,10 @@ class App(customtkinter.CTk):
 
     def run_command(self, command):
         try:
-            os.system(command)
+            # Use subprocess to run the command in a new terminal window
+            subprocess.Popen(f'start cmd /c {command}', shell=True)
         except Exception as e:
-            print(f"Error running command '{command}': {e}")
+            print(f"Error: {str(e)}")
 
     def download_in_CSV(self):
         # Replace with your download logic
