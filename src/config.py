@@ -8,6 +8,8 @@ DEFAULT_LICENSE = "GNU"
 DEFAULT_TITLE = "THD Analysis Tool - Alpha Edition"
 DEFAULT_THEME = "dark"
 DEFAULT_COLOR = "green"
+DEFAULT_BROADCAST_HOST = "localhost"
+DEFAULT_BROADCAST_PORT = 12345
 
 # Global variables
 version = DEFAULT_VERSION
@@ -17,9 +19,11 @@ color = DEFAULT_COLOR
 theme = DEFAULT_THEME
 license = DEFAULT_LICENSE
 manifest = None
+broadcast_host = DEFAULT_BROADCAST_HOST
+broadcast_port = DEFAULT_BROADCAST_PORT
 
 def load_manifest():
-    global version, author, license, title, theme, color, manifest
+    global version, author, license, title, theme, color, manifest, broadcast_host, broadcast_port
     manifest_path = os.path.join(os.path.dirname(__file__), "assets", "manifest.json")
 
     try:
@@ -34,6 +38,8 @@ def load_manifest():
             title = manifest_data.get("name", DEFAULT_TITLE)
             theme = manifest_data.get("theme", DEFAULT_THEME)
             color = manifest_data.get("color",DEFAULT_COLOR)
+            broadcast_host = manifest_data.get("broadcast", {}).get("host", DEFAULT_BROADCAST_HOST)
+            broadcast_port = manifest_data.get("broadcast", {}).get("port", DEFAULT_BROADCAST_PORT)
 
     except FileNotFoundError:
         print(f"File '{manifest_path}' not found. Using default values.")
@@ -45,6 +51,8 @@ def load_manifest():
         theme = DEFAULT_THEME
         license = DEFAULT_LICENSE
         manifest = None
+        broadcast_port = DEFAULT_BROADCAST_PORT
+        broadcast_host = DEFAULT_BROADCAST_HOST
     except json.JSONDecodeError as e:
         print(f"Error decoding JSON: {str(e)}. Using default values.")
         # Use default values if JSON decoding error
@@ -55,6 +63,8 @@ def load_manifest():
         theme = DEFAULT_THEME
         license = DEFAULT_LICENSE
         manifest = None
+        broadcast_port = DEFAULT_BROADCAST_PORT
+        broadcast_host = DEFAULT_BROADCAST_HOST
 
 def get_version():
     return version
@@ -77,5 +87,7 @@ def get_title():
 def get_manifest():
     return manifest
 
+def get_socket_config():
+    return [broadcast_host, broadcast_port]
 # Load manifest data on script start
 load_manifest()

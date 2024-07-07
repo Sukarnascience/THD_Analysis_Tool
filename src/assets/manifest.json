@@ -5,6 +5,10 @@
   "theme":"dark",
   "color":"green",
   "author":"Sukarna Jana",
+  "broadcast":{
+    "host":"localhost",
+    "port":12345
+  },
   "outsource":[
     {
       "name":"NWT 4",
@@ -13,8 +17,23 @@
     {
       "name":"NWT 5",
       "exe":"\"C:\\Program Files (x86)\\WinNWT5\\winnwt5.exe\" app_en.qm"
+    },
+    {
+      "name":"Graph Deploy",
+      "exe":"python c:/Users/sukar/Documents/Client_Service/THD_Analysis_Tool/src/display_graph.py"
     }
   ],
+  "digitalLabel":{
+    "voltage" : "v",
+    "frequency" : "Hz",
+    "charge" : "uC",
+    "pressure" : "bar",
+    "moisture" : "ppm",
+    "temperature" : "degC",
+    "air quality" : "ppm",
+    "partial discharge" : "",
+    "oil level" : "%"
+  },
   "graphicalLabel":{
 
   }
