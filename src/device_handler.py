@@ -4,6 +4,7 @@ import time
 import os
 import socket
 import config
+import ast #add
 
 class ConnectDevice:
     def __init__(self):
@@ -57,6 +58,7 @@ class ConnectDevice:
                 if(data!=""):
                     print(data)
                 if data.startswith("[") and data.endswith("]"):
+                    self.broadcast_data(data)
                     return data
                 else:
                     #print("Data is corrupted")
@@ -69,50 +71,10 @@ class ConnectDevice:
             return None
         
     def broadcast_data(self, data):
+        numbers_list = ast.literal_eval(data)
+        numbers_str = ','.join(map(str, numbers_list))
         try:
-            self.broadcast_socket.sendto(data.encode(), (self.broadcast_host, self.broadcast_port))
-            print(f"Data broadcasted: {data}")
+            self.broadcast_socket.sendto(numbers_str.encode(), (self.broadcast_host, self.broadcast_port))
+            print(f"Data broadcasted: {numbers_str}")
         except Exception as e:
             print(f"Failed to broadcast data: {e}")
-
-    def create_live_data(self, fname, data):
-        try:
-            with open(f'live_{fname}.csv', 'a', newline='') as file:
-                writer = csv.writer(file)
-                writer.writerow([time.strftime("%Y-%m-%d %H:%M:%S"), data])
-                self.collectData.append([time.strftime("%Y-%m-%d %H:%M:%S"), data])
-                try:
-                    file.close()
-                except:
-                    print("Failed to close the file")
-            print("Backup Successfully")
-        except:
-            print("Backup Failed")
-
-    def backup_csv(self, data, filename="backup.csv"):
-        if data:
-            try:
-                backup_filename = f"{filename.split('.')[0]}_{int(time.time())}.csv"
-                with open(backup_filename, mode='w', newline='') as file:
-                    writer = csv.writer(file)
-                    writer.writerow(["Timestamp", "Data"])
-                    writer.writerow([time.strftime("%Y-%m-%d %H:%M:%S"), data])
-                print(f"Data backed up to {backup_filename}")
-            except Exception as e:
-                print(f"Failed to backup data: {e}")
-        else:
-            print("No data to backup")
-
-'''
-# Example usage
-if __name__ == "__main__":
-    device = SatCDevice()
-    device.connect(portN="COM4", baudRateN=9600, timeOutN=0.1)
-    
-    if device.is_connected():
-        device.send_data("Hello Device")
-        data = device.get_data()
-        if data:
-            print(f"Received data: {data}")
-            device.backup_csv(data)
-'''

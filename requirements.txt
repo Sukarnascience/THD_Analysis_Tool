@@ -1,2 +1,12 @@
 customtkinter==5.2.0
 Pillow==9.5.0
+matplotlib==3.5.3
+matplotlib-inline==0.1.6
+python-socketio==5.11.0
+pyserial==3.5
+tk==0.1.0 
+socket 
+collections 
+deque 
+threading
+simple-websocket==1.0.0

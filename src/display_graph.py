@@ -34,19 +34,25 @@ class DataPlotter:
 
     def receive_data(self):
         while True:
-            data, _ = self.receive_socket.recvfrom(1024)
-            data = data.decode('utf-8').split(',')
-            if len(data) == 9:
-                voltage, frequency, charge, pressure, moisture, temperature, air_quality, partial_discharge, oil_level = map(float, data)
-                self.voltage_data.append(voltage)
-                self.frequency_data.append(frequency)
-                self.charge_data.append(charge)
-                self.pressure_data.append(pressure)
-                self.moisture_data.append(moisture)
-                self.temperature_data.append(temperature)
-                self.air_quality_data.append(air_quality)
-                self.partial_discharge_data.append(partial_discharge)
-                self.oil_level_data.append(oil_level)
+            try:
+                data, _ = self.receive_socket.recvfrom(1024)
+                data = data.decode('utf-8').split(',')
+                print(data)
+                if len(data) == 9:
+                    values = data
+                    values = list(map(float, values))
+                    voltage, frequency, charge, pressure, moisture, temperature, air_quality, partial_discharge, oil_level = values
+                    self.voltage_data.append(voltage)
+                    self.frequency_data.append(frequency)
+                    self.charge_data.append(charge)
+                    self.pressure_data.append(pressure)
+                    self.moisture_data.append(moisture)
+                    self.temperature_data.append(temperature)
+                    self.air_quality_data.append(air_quality)
+                    self.partial_discharge_data.append(partial_discharge)
+                    self.oil_level_data.append(oil_level)
+            except Exception as e:
+                print(f"Failed to fetch broadcast data: {e}")
 
 class App:
     def __init__(self, root):

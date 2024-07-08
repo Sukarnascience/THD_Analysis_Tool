@@ -6,6 +6,7 @@ import time
 import subprocess
 import socket #add
 import csv #add
+import ast #add
 
 # Custom Lib
 import config
@@ -164,7 +165,48 @@ class App(customtkinter.CTk):
             print(f"Error: {str(e)}")
 
     def download_csv(self):
-        self.status.backup_csv("full_backup.csv")
+        filename = "full_backup.csv"
+        if self.collectData:
+            try:
+                with open(filename, mode='w', newline='') as file:
+                    writer = csv.writer(file)
+                    # Process all entries
+                    processed_data = [self.process_entry(entry) for entry in self.collectData]
+                    writer.writerows(processed_data)
+                print(f"Data backed up to {filename}")
+            except Exception as e:
+                print(f"Failed to backup data: {e}")
+        else:
+            print("No data to backup")
+
+    def createLiveData(self, fname, data):
+        try:
+            with open(('live_{}.csv'.format(fname)), 'a', newline='') as file:
+                writer = csv.writer(file)
+                # Split the datetime string into date and time
+                datetime_str = data[0]
+                date_str, time_str = datetime_str.split()
+
+                # Convert the string representation of the list to an actual list of numbers
+                numbers_list = ast.literal_eval(data[1])
+
+                # Combine everything into the desired format
+                final_list = [date_str, time_str] + numbers_list
+                writer.writerow(final_list)
+                self.collectData.append(data)
+                try:
+                    file.close()
+                except:
+                    print("Failed to close the file")
+            print("Backup Successfully")
+        except:
+            print("Backup Failed")
+    # Function to process a single entry
+    def process_entry(self,entry):
+        datetime_str = entry[0]
+        date_str, time_str = datetime_str.split()
+        numbers_list = ast.literal_eval(entry[1])
+        return [date_str, time_str] + numbers_list
 
     def connectD(self):
         port_value = self.COMentry.get()
@@ -196,6 +238,7 @@ class App(customtkinter.CTk):
             if logData:
                 self.textbox.insert("end", logData + "\n")
                 self.textbox.see("end")
+                self.createLiveData("live_data", [time.strftime("%Y-%m-%d %H:%M:%S"), logData])
         self.after(200, self.printInSerialMonitor)
     def send_serial_data(self):
         if self.status.is_connected():
