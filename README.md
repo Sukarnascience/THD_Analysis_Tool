@@ -1,13 +1,18 @@
-# Digital Serial Plotter
+# THD Analysis Tool
 
 ## Project Structure
 
 ```
 C:.
+├───docs
+|   └── ...
 ├───src
 │   ├───assets
 │   │   └───manifest.json
-│   └───__pycache__
+|   |   └── ...
+│   ├───__pycache__
+|   ├── main.py
+|   └── ...
 └───test
     └───dummyTHD
 ```
@@ -103,10 +108,28 @@ Handles the plotting and graphical display of the sensor data in real-time.
 ### `main.py`
 The main script that initializes the application and manages the overall workflow.
 
+## Screenshots
+
+Here are some screenshots to demonstrate how the software works:
+
+### Main UI
+![Main UI](Docs/main_ui.png)
+![Main UI Running](Docs/main_ui2.png)
+
+### Live Backup
+![Live Backup](Docs/live_backup.png)
+
+### Digital Values Plotting
+![Digital Values null](Docs/digital_values1.png)
+![Digital Values running](Docs/digital_values2.png)
+
+### Graphical Data Plotting
+![Graphical Data](Docs/graphical_data.png)
+
 ## Contact
 
-For any issues or further assistance, please contact Sukarna Jana at sukarnascience@gmail.com .
+For any issues or further assistance, please contact Sukarna Jana at sukarnascience@gmail.com.
 
-```
-This README file provides comprehensive instructions for installing, configuring, and running your software, as well as testing it with a dummy device if the actual device is not available.
-```
+## License
+
+This project is licensed under the GNU General Public License v3.0.
