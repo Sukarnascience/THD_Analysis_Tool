@@ -48,6 +48,7 @@ class App(customtkinter.CTk):
         self.broadcast_port = getSocketData[1]  # Set the broadcast port
         self.broadcast_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # Create UDP socket
         self.collectData = []
+        self.units = config.get_units()
 
         # Create sidebar frame with widgets
         self.sidebar_frame = customtkinter.CTkFrame(self, width=140, corner_radius=0)
@@ -134,8 +135,9 @@ class App(customtkinter.CTk):
         self.tabview.tab("Serial Monitor").grid_rowconfigure(0, weight=0)
         self.tabview.tab("Serial Monitor").grid_columnconfigure(1, weight=0) 
         self.tabview.tab("Serial Monitor").grid_rowconfigure(1, weight=1)
-        #self.tabview.tab("Graphical Serial Plotter").grid_columnconfigure(0, weight=1)
-        self.tabview.tab("Digital Serial Plotter").grid_columnconfigure(0, weight=1)
+        # self.tabview.tab("Graphical Serial Plotter").grid_columnconfigure(0, weight=1)
+        self.tabview.tab("Digital Serial Plotter").grid_columnconfigure((0, 1, 2), weight=1)
+        self.tabview.tab("Digital Serial Plotter").grid_rowconfigure((0, 1, 2), weight=1)
 
         # Example widgets in tab "Serial Monitor"
         # create serialIn
@@ -149,6 +151,33 @@ class App(customtkinter.CTk):
         self.printInSerialMonitor()
 
         # Example widgets in tab "Graphical Serial Plotter"
+        # Widgets in "Digital Serial Plotter" tab
+        self.digital_values = []
+        for i in range(3):
+            for j in range(3):
+                value_label = customtkinter.CTkLabel(self.tabview.tab("Digital Serial Plotter"), text=f"Value {i * 3 + j + 1}", font=("Helvetica", 40, "bold"))
+                unit_label = customtkinter.CTkLabel(self.tabview.tab("Digital Serial Plotter"), text="Unit", font=("Helvetica", 12))
+                value_label.grid(row=i, column=j, pady=(10, 10), padx=10, sticky="n")
+                unit_label.grid(row=i, column=j, pady=(80, 10), padx=10, sticky="n")
+                self.digital_values.append((value_label, unit_label))
+
+        # Set default values
+        self.appearance_mode_optionemenu.set(config.theme)
+        self.scaling_optionemenu.set("100%")
+
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+    def update_digital_plotter(self, numbers_list):
+        for i, (value_label, unit_label) in enumerate(self.digital_values):
+            if i < len(numbers_list):
+                value_label.configure(text=f"{numbers_list[i]}")
+                unit_label.configure(text=self.units[i])
+            else:
+                value_label.configure(text="N/A")
+                unit_label.configure(text="N/A")
+
+    def on_closing(self, event=0):
+        self.destroy()
 
     def change_appearance_mode_event(self, new_appearance_mode: str):
         customtkinter.set_appearance_mode(new_appearance_mode)
@@ -239,6 +268,8 @@ class App(customtkinter.CTk):
                 self.textbox.insert("end", logData + "\n")
                 self.textbox.see("end")
                 self.createLiveData("live_data", [time.strftime("%Y-%m-%d %H:%M:%S"), logData])
+                numbers_list = ast.literal_eval(logData)
+                self.update_digital_plotter(numbers_list)
         self.after(200, self.printInSerialMonitor)
     def send_serial_data(self):
         if self.status.is_connected():

@@ -1,6 +1,6 @@
 {
-  "name":"THD Analysis Tool V1.0.1 - Beta Edition",
-  "version": "1.0.1",
+  "name":"THD Analysis Tool V5.4.0",
+  "version": "5.4.0",
   "license": "GNU",
   "theme":"dark",
   "color":"green",
@@ -23,6 +23,7 @@
       "exe":"python c:/Users/sukar/Documents/Client_Service/THD_Analysis_Tool/src/display_graph.py"
     }
   ],
+  "units":["VOLTAGE", "CURRENT", "PF", "kW", "kVA", "kVAR", "FREQUENCY", "kWh", "kVAh"],
   "digitalLabel":{
     "voltage" : "v",
     "frequency" : "Hz",

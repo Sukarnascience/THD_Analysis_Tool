@@ -2,14 +2,15 @@ import json
 import os
 
 # Default values
-DEFAULT_VERSION = "v1.0.0"
+DEFAULT_VERSION = "v5.4.0"
 DEFAULT_AUTHOR = "Sukarna Jana"
 DEFAULT_LICENSE = "GNU"
-DEFAULT_TITLE = "THD Analysis Tool - Alpha Edition"
+DEFAULT_TITLE = "THD Analysis Tool"
 DEFAULT_THEME = "dark"
 DEFAULT_COLOR = "green"
 DEFAULT_BROADCAST_HOST = "localhost"
 DEFAULT_BROADCAST_PORT = 12345
+DEFAULT_UNITS = ['VOLTAGE', 'CURRENT', 'PF', 'kW', 'kVA', 'kVAR', 'FREQUENCY', 'kWh', 'kVAh']
 
 # Global variables
 version = DEFAULT_VERSION
@@ -21,9 +22,10 @@ license = DEFAULT_LICENSE
 manifest = None
 broadcast_host = DEFAULT_BROADCAST_HOST
 broadcast_port = DEFAULT_BROADCAST_PORT
+units = DEFAULT_UNITS
 
 def load_manifest():
-    global version, author, license, title, theme, color, manifest, broadcast_host, broadcast_port
+    global version, author, license, title, theme, color, manifest, broadcast_host, broadcast_port, units
     manifest_path = os.path.join(os.path.dirname(__file__), "assets", "manifest.json")
 
     try:
@@ -40,6 +42,7 @@ def load_manifest():
             color = manifest_data.get("color",DEFAULT_COLOR)
             broadcast_host = manifest_data.get("broadcast", {}).get("host", DEFAULT_BROADCAST_HOST)
             broadcast_port = manifest_data.get("broadcast", {}).get("port", DEFAULT_BROADCAST_PORT)
+            units = manifest_data.get("units",DEFAULT_UNITS)
 
     except FileNotFoundError:
         print(f"File '{manifest_path}' not found. Using default values.")
@@ -53,6 +56,7 @@ def load_manifest():
         manifest = None
         broadcast_port = DEFAULT_BROADCAST_PORT
         broadcast_host = DEFAULT_BROADCAST_HOST
+        units = DEFAULT_UNITS
     except json.JSONDecodeError as e:
         print(f"Error decoding JSON: {str(e)}. Using default values.")
         # Use default values if JSON decoding error
@@ -65,6 +69,7 @@ def load_manifest():
         manifest = None
         broadcast_port = DEFAULT_BROADCAST_PORT
         broadcast_host = DEFAULT_BROADCAST_HOST
+        units = DEFAULT_UNITS
 
 def get_version():
     return version
@@ -86,6 +91,9 @@ def get_title():
 
 def get_manifest():
     return manifest
+
+def get_units():
+    return units
 
 def get_socket_config():
     return [broadcast_host, broadcast_port]
